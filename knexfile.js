@@ -16,7 +16,7 @@ module.exports = {
     },
     pool: {
       afterCreate: (conn, done) => {
-        conn.run("PRAGMA foreign-keys= on", done);
+        conn.run("PRAGMA foreign_keys= on", done);
       }
     }
   },
