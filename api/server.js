@@ -1,16 +1,15 @@
 const express= require('express');
-const server= express();
-const cors= require('cors');
 const helmet= require('helmet');
+const cors= require('cors');
 const session= require('express-session');
+const restricted= require('../auth/restricted-middleware');
 
 //define routers
 const usersRouter= require('../users/usersRouter');
 const authRouter= require('../auth/router');
 
-//assign routers
-server.use('/api/users', usersRouter);
-server.use('/api/auth', authRouter);
+const server= express();
+
 
 const secret= process.env.SECRET || "This is a big secret";
 const sessionConfig= {
@@ -30,6 +29,10 @@ server.use(cors());
 server.use(helmet());
 server.use(express.json());
 server.use(session(sessionConfig));
+
+//assign routers
+server.use('/api/users', restricted, usersRouter);
+server.use('/api/auth', authRouter);
 
 //root route
 server.get('/', (req, res) => {
